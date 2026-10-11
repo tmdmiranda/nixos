@@ -91,7 +91,8 @@ button:hover {
 #scratchpad,
 #power-profiles-daemon,
 #mpd,
-#custom-fan-speed {
+#custom-fan-speed,
+#custom-power {
     padding: 0 10px;
     color: #ffffff;
 }
@@ -135,11 +136,11 @@ button:hover {
 
 
 #battery {
-    color: #ffffff;
+    color: #f0c574;
 }
 
 #battery.charging, #battery.plugged {
-    color: #ffffff;
+    color: #f0c574;
 }
 
 @keyframes blink {
