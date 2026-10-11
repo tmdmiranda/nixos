@@ -15,7 +15,7 @@ rescan() {
   # Unprivileged nmap can't see MACs — merge the now-warm ARP table instead.
   ip -o neigh show > "$mactmp"
   {
-    echo "LAN $cidr ($(date +%H:%M))"
+    echo "LAN ($(date +%H:%M))"
     awk '
       FNR == NR { if ($5 ~ /:/) m[$1] = $5; next }
       /^Nmap scan report for/ {
