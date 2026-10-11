@@ -42,6 +42,11 @@
         ] ++extraModules;
       };
     in {
+      templates.zig = {
+        path = ./templates/zig;
+        description = "Zig project shell (zig + zls, matched versions)";
+      };
+
       nixosConfigurations = {
         laptop = mkNixosSystem {
           system = "x86_64-linux";

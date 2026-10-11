@@ -11,5 +11,6 @@
     vagrant
     nodejs_22
     uv
+    zig
   ];
 }

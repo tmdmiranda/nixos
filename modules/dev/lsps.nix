@@ -5,5 +5,11 @@
     nil
     pyright
     gopls
+    vscode-langservers-extracted
+    rust-analyzer
+    stylua
+    clang-tools
+    asm-lsp
+    zls
   ];
 }
