@@ -1,0 +1,46 @@
+window {
+    background-color: rgba(0, 0, 0, 0.94);
+    color: #ffffff;
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 14px;
+}
+
+dialog {
+    padding: 14px;
+}
+
+label {
+    color: #ffffff;
+}
+
+button {
+    background-image: none;
+    background-color: #181818;
+    color: #ffffff;
+    border: 1px solid #555555;
+    border-radius: 4px;
+    padding: 7px 14px;
+}
+
+button:hover {
+    background-color: #a37800;
+    color: #ffffff;
+}
+
+scale trough {
+    background-color: #333333;
+    border-radius: 4px;
+    min-height: 6px;
+}
+
+scale highlight {
+    background-color: #a37800;
+    border-radius: 4px;
+}
+
+scale slider {
+    background-color: #ffffff;
+    border-radius: 999px;
+    min-width: 16px;
+    min-height: 16px;
+}
