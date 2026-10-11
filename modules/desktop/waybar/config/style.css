@@ -92,7 +92,8 @@ button:hover {
 #power-profiles-daemon,
 #mpd,
 #custom-fan-speed,
-#custom-power {
+#custom-power,
+#custom-wifi {
     padding: 0 10px;
     color: #ffffff;
 }
