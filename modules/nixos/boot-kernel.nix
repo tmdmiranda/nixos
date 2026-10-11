@@ -3,7 +3,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # NOTE: /etc had a leading-space typo in the exfat entry — fixed here.
   boot.supportedFilesystems = [ "exfat" ];
 
   boot.blacklistedKernelModules = [ "acer_wmi" ];

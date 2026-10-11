@@ -2,7 +2,6 @@
 
 let
   moduleRoot = ../../modules;
-  # Path concat (not string interp) so the import stays a path — no store-context realise issues.
   M = path: import (moduleRoot + "/${path}");
 in
 {

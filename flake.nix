@@ -9,10 +9,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       };
 
-      # Hourly-auto-updated codex CLI ("always latest", pinned via flake.lock).
-      # Refresh with: nix flake update codex-cli-nix
-      # (opencode intentionally stays on nixpkgs-unstable: the dan-online
-      # hourly flake is stale at 1.14.33 while nixpkgs already has 1.18.35.)
       codex-cli-nix.url = "github:sadjow/codex-cli-nix";
   };
 
@@ -34,7 +30,6 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              # Auto-backup (instead of failing) when HM-managed files already exist
               backupFileExtension = "hm-backup";
               extraSpecialArgs = {
                 inherit inputs;
@@ -48,13 +43,6 @@
       };
     in {
       nixosConfigurations = {
-        # NOTE: no hosts/desktop/ yet — re-add by copying hosts/laptop to hosts/desktop
-        # desktop = mkNixosSystem {
-        #   system = "x86_64-linux";
-        #   hostname = "desktop";
-        #   username = "tiago";
-        # };
-
         laptop = mkNixosSystem {
           system = "x86_64-linux";
           hostname = "laptop";

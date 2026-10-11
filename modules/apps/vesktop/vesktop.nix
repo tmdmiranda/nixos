@@ -4,8 +4,6 @@
     vesktop
   ];
 
-  # Per-file links ONLY — never link all of .config/vesktop, that would clobber
-  # live session data (Cookies, IndexedDB, GPUCache) on force=true.
   home.file.".config/vesktop/settings.json" = {
     target = ".config/vesktop/settings.json";
     source = ./config/settings.json;

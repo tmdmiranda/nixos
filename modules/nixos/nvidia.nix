@@ -27,8 +27,6 @@
     };
   };
 
-  # Verified-working dcn_3_1_5_dmcub.bin from the 2024-09-09 linux-firmware release.
-  # Keep hash pinned; do not "update" casually.
   hardware.firmware = [
     (pkgs.runCommand "amdgpu-dmcub-override" {
       nativeBuildInputs = [ pkgs.zstd ];

@@ -5,8 +5,6 @@ let
       pname = "linuwu-sense";
       version = "git";
 
-      # Local checkout — intentionally absolute, no upstream pin yet.
-      # Rebuild with --impure. See plan.md §5 for future inputs.linuwu-sense idea.
       src = /home/tiago/Linuwu-Sense;
 
       hardeningDisable = [ "pic" "format" ];
