@@ -26,4 +26,7 @@
     nssmdns4 = true;
     openFirewall = true;
   };
+  services.tailscale = {
+    enable = true;
+  };
 }

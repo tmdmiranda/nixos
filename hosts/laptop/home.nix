@@ -40,6 +40,7 @@ in
     (M "system/xhost.nix")
     (M "system/steam-entry.nix")
     (M "system/mimeapps/mimeapps.nix")
+    (M "system/tailscale.nix")
   ];
 
   home.packages = with pkgs; [
