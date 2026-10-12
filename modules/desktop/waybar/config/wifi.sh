@@ -2,35 +2,39 @@
 # All-in-one wifi module: signal icon on the bar; hover shows own connection,
 # a separator, then cached LAN peers. Click rescans the LAN (lan peers only;
 # own status always reads live via nmcli, no radio hit).
+# Peer discovery is ARP-based (fast, sees firewalled hosts): on a /24 it does
+# a ~1-2s parallel ping sweep to populate ARP; on bigger nets (e.g. eduroam)
+# it just snapshots the ARP table instead of sweeping thousands of hosts.
 CACHE="$HOME/.cache/waybar-lan.txt"
 
 rescan() {
-  local iface cidr tmp mactmp
+  local iface cidr tmp prefix base i self
   iface=$(ip route get 1.1.1.1 2>/dev/null | grep -oP 'dev \K\S+')
   cidr=$(ip -o -f inet addr show "$iface" 2>/dev/null | grep -oP 'inet \K\S+')
   [ -z "$cidr" ] && exit 0
+  prefix=${cidr#*/}
+  self=${cidr%/*}
+  if [ "$prefix" = "24" ]; then
+    # Small net: ping every address in parallel to (re)populate ARP.
+    # ~1-2s total. ARP is L2, so host firewalls don't hide anyone.
+    base=${self%.*}
+    for i in $(seq 1 254); do
+      ping -c1 -W1 -n "$base.$i" >/dev/null 2>&1 &
+    done
+    wait
+  fi
   tmp=$(mktemp)
-  mactmp=$(mktemp)
-  nmap -sn -T4 "$cidr" 2>/dev/null > "$tmp.raw"
-  # Unprivileged nmap can't see MACs — and misses firewalled hosts entirely
-  # (no ping/TCP reply -> "down"). So list the now-warm ARP table instead,
-  # using nmap output only for hostnames. ARP entries show even when nmap
-  # thought the host was down (e.g. desktop with firewall on).
-  ip -o neigh show > "$mactmp"
   {
-    echo "LAN ($(date +%H:%M))"
-    awk -v iface="$iface" '
-      FNR == NR {
-        if (/^Nmap scan report for/) {
-          if (NF == 6) { ip = $6; gsub(/[()]/, "", ip); host = $5 } else { ip = $5; host = "-" }
-          if (!(ip in hostmap)) order[++n] = ip
-          hostmap[ip] = host
-        }
-        next
-      }
+    echo "LAN $self/$prefix ($(date +%H:%M))"
+    while read -r ip mac; do
+      [ -z "$ip" ] && continue
+      host=$(timeout 2 getent hosts "$ip" 2>/dev/null | awk '{print $2; exit}')
+      [ -z "$host" ] && host="-"
+      printf "%-15s %-17s %s\n" "$ip" "$mac" "$host"
+    done < <(ip -o neigh show | awk -v iface="$iface" '
       {
         # key/value parse: "<ip> [dev <iface>] [lladdr <mac>] <state>"
-        # (iproute2 omits "dev X" when already filtered, so do not rely on positions)
+        # (do not rely on positions; skip entries with no MAC)
         ip = $1
         if (ip !~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ || (ip in seen)) next
         dev = ""; mac = ""
@@ -41,17 +45,13 @@ rescan() {
         if (dev != "" && dev != iface) next
         if (mac == "") next
         seen[ip] = 1
-        host = (ip in hostmap) ? hostmap[ip] : "-"
-        printf("%-15s %-17s %s\n", ip, mac, host)
-      }
-      END {
-        # nmap-up hosts missing from ARP (e.g. self) keep mac "-"
-        for (i = 1; i <= n; i++)
-          if (!(order[i] in seen))
-            printf("%-15s %-17s %s\n", order[i], "-", hostmap[order[i]])
-      }' "$tmp.raw" "$mactmp" | sort -V
+        print ip, mac
+      }' | sort -V)
+    # self has no ARP entry — list it for completeness
+    host=$(timeout 2 getent hosts "$self" 2>/dev/null | awk '{print $2; exit}')
+    [ -z "$host" ] && host=$(hostname)
+    printf "%-15s %-17s %s\n" "$self" "-" "$host"
   } > "$tmp"
-  rm -f "$tmp.raw" "$mactmp"
   mkdir -p "$(dirname "$CACHE")"
   mv "$tmp" "$CACHE"
 }

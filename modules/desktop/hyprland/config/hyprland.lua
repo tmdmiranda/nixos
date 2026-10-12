@@ -361,6 +361,23 @@ hl.window_rule({
   stay_focused = true,
 })
 
+hl.window_rule({
+  name = "Blueman Float",
+  float = true,
+  match = {
+    class = "blueman-manager",
+  },
+})
+
+
+hl.window_rule({
+  name = "PavuControl",
+  float = true,
+  match = {
+    class = "org.pulseaudio.pavucontrol",
+  },
+})
+
 --[[
 hl.window_rule({
     name = "Steam Notifications",
