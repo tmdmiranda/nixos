@@ -21,7 +21,7 @@
         "custom/wifi",
         "power-profiles-daemon",
         "temperature",
-        "custom/power",
+        "battery",
         "clock",
         "tray",
     ],
@@ -104,10 +104,18 @@
         "format-critical": "{temperatureC}°!",
         "format": "{temperatureC}°",
     },
-    "custom/power": {
-        "exec": "$HOME/.config/waybar/power.sh",
-        "return-type": "json",
+    "battery": {
+        "bat": "BAT1",
+        "adapter": "ACAD",
         "interval": 5,
+        "states": {
+            "warning": 20,
+            "critical": 10
+        },
+        "format": "<span color='#f0c574'>bat:</span> {capacity}%",
+        "format-charging": "<span color='#f0c574'>plug:</span> {capacity}%",
+        "format-plugged": "<span color='#f0c574'>plug:</span> {capacity}%",
+        "format-full": "<span color='#f0c574'>plug:</span> {capacity}%",
         "tooltip": true,
     },
     "power-profiles-daemon": {
