@@ -12,19 +12,44 @@ rescan() {
   tmp=$(mktemp)
   mactmp=$(mktemp)
   nmap -sn -T4 "$cidr" 2>/dev/null > "$tmp.raw"
-  # Unprivileged nmap can't see MACs — merge the now-warm ARP table instead.
+  # Unprivileged nmap can't see MACs — and misses firewalled hosts entirely
+  # (no ping/TCP reply -> "down"). So list the now-warm ARP table instead,
+  # using nmap output only for hostnames. ARP entries show even when nmap
+  # thought the host was down (e.g. desktop with firewall on).
   ip -o neigh show > "$mactmp"
   {
     echo "LAN ($(date +%H:%M))"
-    awk '
-      FNR == NR { if ($5 ~ /:/) m[$1] = $5; next }
-      /^Nmap scan report for/ {
-        if (pending != "") print pending
-        if (NF == 6) { ip = $6; gsub(/[()]/, "", ip); host = $5 } else { ip = $5; host = "-" }
-        mac = (ip in m) ? m[ip] : "-"
-        pending = sprintf("%-15s %-17s %s", ip, mac, host)
+    awk -v iface="$iface" '
+      FNR == NR {
+        if (/^Nmap scan report for/) {
+          if (NF == 6) { ip = $6; gsub(/[()]/, "", ip); host = $5 } else { ip = $5; host = "-" }
+          if (!(ip in hostmap)) order[++n] = ip
+          hostmap[ip] = host
+        }
+        next
       }
-      END { if (pending != "") print pending }' "$mactmp" "$tmp.raw"
+      {
+        # key/value parse: "<ip> [dev <iface>] [lladdr <mac>] <state>"
+        # (iproute2 omits "dev X" when already filtered, so do not rely on positions)
+        ip = $1
+        if (ip !~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ || (ip in seen)) next
+        dev = ""; mac = ""
+        for (i = 2; i <= NF; i++) {
+          if ($i == "dev") dev = $(i+1)
+          else if ($i == "lladdr") mac = $(i+1)
+        }
+        if (dev != "" && dev != iface) next
+        if (mac == "") next
+        seen[ip] = 1
+        host = (ip in hostmap) ? hostmap[ip] : "-"
+        printf("%-15s %-17s %s\n", ip, mac, host)
+      }
+      END {
+        # nmap-up hosts missing from ARP (e.g. self) keep mac "-"
+        for (i = 1; i <= n; i++)
+          if (!(order[i] in seen))
+            printf("%-15s %-17s %s\n", order[i], "-", hostmap[order[i]])
+      }' "$tmp.raw" "$mactmp" | sort -V
   } > "$tmp"
   rm -f "$tmp.raw" "$mactmp"
   mkdir -p "$(dirname "$CACHE")"
