@@ -30,7 +30,11 @@
 
   virtualisation.docker = {
     enable = true;
+    enableNvidia = true;
     daemon.settings.features.buildkit = true;
+    package = pkgs.docker.override {
+      buildxSupport = true;
+    };
   };
 
   environment.systemPackages = with pkgs; [

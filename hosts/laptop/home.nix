@@ -34,6 +34,7 @@ in
     (M "apps/vesktop/vesktop.nix")
     (M "apps/gaming.nix")
     (M "apps/media.nix")
+    (M "apps/spotify.nix")
 
     (M "system/bash.nix")
     (M "system/fonts.nix")
