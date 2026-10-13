@@ -8,4 +8,6 @@ i have no idea what im doing so i just steal from others
 
 ![My desktop 2](./screenshots/2026-10-13-132543_hyprshot.png)
 
+just some simple dotfiles for my laptop setup, got some funky shit going on especially in the graphics driver part.
 
+NixOS + hyprland config made by a lazy ass
