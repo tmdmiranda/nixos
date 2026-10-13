@@ -1,13 +1,13 @@
 ### Vro idk i stole it from github.com/lipeeeee but i like my config :)
 
-Please dont hate too much :p
+my first dotfiles i'm tryharding lol
 
 ![My desktop](./screenshots/2026-10-13-132407_hyprshot.png)
 
-i have no idea what im doing so i just steal from others
 
 ![My desktop 2](./screenshots/2026-10-13-132543_hyprshot.png)
 
 just some simple dotfiles for my laptop setup, got some funky shit going on especially in the graphics driver part.
 
-NixOS + hyprland config made by a lazy ass
+Acer Nitro V 15 Laptop, NixOS + Hyprland, Home Manager, NvChad
+
