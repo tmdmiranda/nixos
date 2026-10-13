@@ -1,4 +1,4 @@
-### Vro idk i stole it from [lipeeeee](github.com/lipeeeee) but i like my config :)
+### Vro idk i stole it from [lipeeeee](https://github.com/lipeeeee/nixos) but i like my config :)
 
 my first dotfiles i'm tryharding lol
 
