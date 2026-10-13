@@ -14,5 +14,9 @@
     fzf
     cloc
     nmap
+
+    cava
+    pipes
+    fastfetch
   ];
 }

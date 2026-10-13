@@ -1,9 +1,15 @@
 { pkgs, ... }:
 {
-  home.packages = with pkgs; [
-    vesktop
+  home.packages = [
+    (pkgs.vesktop.overrideAttrs (old: {
+      nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ pkgs.makeWrapper ];
+      postFixup = (old.postFixup or "") + ''
+        wrapProgram $out/bin/vesktop \
+          --unset NIXOS_OZONE_WL \
+          --add-flags "--ozone-platform=x11"
+      '';
+    }))
   ];
-
   home.file.".config/vesktop/settings.json" = {
     target = ".config/vesktop/settings.json";
     source = ./config/settings.json;
