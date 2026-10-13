@@ -1,13 +1,13 @@
 window {
-    background-color: rgba(30, 31, 28, 0.85);
-    border: 1px solid #ae81ff;
+    background-color: rgba(15, 18, 9, 0.95);
+    border: 1px solid #aaaaaa;
     border-radius: 0;
     font-family: "JetBrainsMono Nerd Font";
     font-size: 12px;
 }
 
 #input {
-    background-color: #414339;
+    background-color: #050301;
     color: #f8f8f2;
     border: none;
     border-radius: 0;
@@ -30,7 +30,7 @@ window {
 
 #entry:selected {
     background-color: #3e3d32;
-    outline: 1px solid #ae81ff;
+    outline: 1px solid #fffaf0;
 }
 
 #text {
@@ -38,7 +38,7 @@ window {
 }
 
 #entry:selected #text {
-    color: #a6e22e;
+    color: #ffcc00;
 }
 
 image {
