@@ -13,6 +13,7 @@ in
     (M "desktop/hyprland/hyprland.nix")
     (M "desktop/waybar/waybar.nix")
     (M "desktop/gtk/gtk.nix")
+    (M "desktop/wofi/wofi.nix")
 
     (M "terminals/kitty/kitty.nix")
     (M "terminals/tmux/tmux.nix")

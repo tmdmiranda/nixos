@@ -10,7 +10,6 @@
     slurp
     hyprshot
     hyprlock
-    wofi
     networkmanagerapplet
     bibata-cursors
     awww
