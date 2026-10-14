@@ -67,5 +67,12 @@ in
     publicShare = null;
   };
 
+  xdg.configFile."autostart/nm-applet.desktop".text = ''
+  [Desktop Entry]
+  Type=Application
+  Name=NetworkManager Applet
+  Hidden=true
+'';
+
   programs.home-manager.enable = true;
 }
