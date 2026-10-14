@@ -10,6 +10,51 @@ wallpaper_index_file="$state_dir/wallpaper_index"
 exec 9>"$state_dir/lock"
 flock -x 9
 
+# Nix runs mpvpaper as .mpvpaper-wrapped, so matching only the process
+# name "mpvpaper" misses it. Match the executable in the full command line.
+# Stop players before scanning files or waiting for awww to become ready.
+player_pattern='(^|/)[.]?mpvpaper(-wrapped)?([[:space:]]|$)'
+player_pids() {
+    local pid status
+    while read -r pid; do
+        [[ -n "$pid" ]] || continue
+        status=$(ps -o stat= -p "$pid" 2>/dev/null) || continue
+        # Zombies have already released their surfaces and cannot be killed.
+        [[ "$status" == *Z* ]] || printf '%s\n' "$pid"
+    done <<< "$(pgrep -u "$(id -u)" -f "$player_pattern" || true)"
+}
+old_players=()
+while read -r pid; do
+    [[ -z "$pid" ]] || old_players+=("$pid")
+done <<< "$(player_pids)"
+if ((${#old_players[@]})); then
+    kill -TERM "${old_players[@]}" 2>/dev/null || true
+    for ((attempt=0; attempt<10; attempt++)); do
+        live_players=()
+        for pid in "${old_players[@]}"; do
+            if kill -0 "$pid" 2>/dev/null; then
+                live_players+=("$pid")
+            fi
+        done
+        ((${#live_players[@]})) || break
+        sleep 0.05
+    done
+    # A stuck decoder must not leave an old wallpaper covering the new one.
+    if ((${#live_players[@]})); then
+        kill -KILL "${live_players[@]}" 2>/dev/null || true
+        for ((attempt=0; attempt<20; attempt++)); do
+            if [[ -z "$(player_pids)" ]]; then
+                break
+            fi
+            sleep 0.05
+        done
+        if [[ -n "$(player_pids)" ]]; then
+            printf 'Previous mpvpaper processes have not exited.\n' >&2
+            exit 1
+        fi
+    fi
+fi
+
 [[ -d "$wallpaper_dir" ]] || { printf 'Wallpaper directory does not exist: %s\n' "$wallpaper_dir" >&2; exit 1; }
 # NUL delimiters preserve spaces and other special characters in filenames.
 wallpaper_list=$(mktemp "$state_dir/list.XXXXXX")
@@ -35,7 +80,6 @@ next_wallpaper="${wallpapers[$next_index]}"
 if [[ "${next_wallpaper,,}" == *.mp4 ]]; then
     MONITOR=$(hyprctl monitors | awk '/Monitor/{print $2; exit}')
     [[ -n "$MONITOR" ]] || { printf 'No monitor detected.\n' >&2; exit 1; }
-    pkill -x mpvpaper 2>/dev/null || true
     mpvpaper -o 'loop-playlist=inf' "$MONITOR" "$next_wallpaper" 9>&- &
 else
     # Ask the daemon on this session's socket instead of checking process names.
@@ -54,11 +98,9 @@ else
             exit 1
         fi
     fi
-    pkill -x mpvpaper 2>/dev/null || true
     awww img "$next_wallpaper" --transition-fps 244 --transition-type simple --transition-duration 1
 fi
 
 # Commit the index only after the wallpaper command succeeds.
 printf '%s\n' "$next_index" > "$wallpaper_index_file.tmp"
 mv -f -- "$wallpaper_index_file.tmp" "$wallpaper_index_file"
-
