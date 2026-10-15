@@ -377,6 +377,26 @@ hl.window_rule({
   },
 })
 
+hl.window_rule({
+  name = "kitty float",
+  float = true,
+  size = {900, 600},
+  center = true,
+  match = {
+    class = "kitty",
+  },
+})
+
+hl.window_rule({
+  name = "imv float",
+  float = true,
+  size = {900, 600},
+  center = true,
+  match = {
+    class = "imv",
+  },
+})
+
 --[[
 hl.window_rule({
     name = "Steam Notifications",

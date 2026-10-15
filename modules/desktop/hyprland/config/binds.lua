@@ -34,7 +34,7 @@ binds.setup = function(hl)
 
   -- Example special workspace (scratchpad)
   hl.bind(binds.mod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
-  hl.bind(binds.mod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
+  hl.bind(binds.mod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic", follow = false }))
 
   -- Scroll through existing workspaces with binds.mod + scroll
   hl.bind(binds.mod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
