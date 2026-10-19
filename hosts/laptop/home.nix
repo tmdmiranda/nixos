@@ -41,6 +41,7 @@ in
     (M "system/audio.nix")
     (M "system/xhost.nix")
     (M "system/steam-entry.nix")
+    (M "system/lutris-entry.nix")
     (M "system/mimeapps/mimeapps.nix")
   ];
 
