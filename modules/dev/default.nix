@@ -12,5 +12,6 @@
     nodejs_22
     uv
     zig
+    p7zip
   ];
 }

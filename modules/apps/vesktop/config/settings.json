@@ -3,5 +3,6 @@
     "minimizeToTray": true,
     "arRPC": true,
     "splashColor": "rgb(239, 239, 241)",
-    "splashBackground": "rgb(18, 18, 20)"
+    "splashBackground": "rgb(18, 18, 20)",
+    "webRTCIPHandlingPolicy": "default_public_and_private_interfaces"
 }

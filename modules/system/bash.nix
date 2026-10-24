@@ -8,7 +8,7 @@
         export PATH="$PATH:$HOME/.zvm/bin"
         export PATH="$PATH:$ZVM_INSTALL"
       fi
-      PS1="\[\033[01;93m\]\u@\h\[\033[00m\]:\[\033[01;31m\]\w\[\033[00m\]\$ "
+      PS1="\[\033[01;93m\]\u@\h\[\033[00m\]:\[\033[01;31m\]\W\[\033[00m\]\$ "
 
       function y() {
         local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
