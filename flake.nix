@@ -10,6 +10,8 @@
       };
 
       codex-cli-nix.url = "github:sadjow/codex-cli-nix";
+      radare2.url = "github:radareorg/radare2";
+      pwndbg.url = "github:pwndbg/pwndbg/dev";
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:

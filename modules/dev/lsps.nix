@@ -9,6 +9,8 @@
     rust-analyzer
     stylua
     clang-tools
+    clang-tools
+    llvmPackages.openmp
     asm-lsp
     zls
   ];

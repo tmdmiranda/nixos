@@ -12,7 +12,7 @@
   services.gvfs.enable = true;
   services.tumbler.enable = true;
   services.power-profiles-daemon.enable = true;
-  services.nfs.server.enable = true;
+  services.nfs.server.enable = false;
   powerManagement.enable = true;
   services.printing.enable = true;
   services.printing.drivers = with pkgs; [

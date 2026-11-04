@@ -14,6 +14,7 @@
     options nvidia NVreg_InitializeSystemPointers=0
   '';
 
+
   boot.kernelParams = [ "nvidia-drm.modeset=1" ];
   boot.initrd.kernelModules = [ ];
 }

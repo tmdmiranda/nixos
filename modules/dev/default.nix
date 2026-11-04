@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   home.packages = with pkgs; [
     gcc
@@ -13,5 +13,12 @@
     uv
     zig
     p7zip
+    gdb
+    file
+    binutils
+    ltrace
+    patchelf
+    inputs.radare2.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.pwndbg.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }

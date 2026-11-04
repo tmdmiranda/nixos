@@ -3,10 +3,7 @@
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
-  networking.firewall.interfaces.wlp3s0 = {
-  allowedUDPPorts = [ 53 67 ];
-  allowedTCPPorts = [ 53 ];
-};
+  networking.firewall.enable = true;
 
   time.timeZone = "Europe/Lisbon";
 

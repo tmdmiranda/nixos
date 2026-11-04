@@ -18,11 +18,16 @@ let
 
       installPhase = ''
         runHook preInstall
+
         mkdir -p $out/lib/modules/${kernel.modDirVersion}/extra
-        install -m 644 src/linuwu_sense.ko $out/lib/modules/${kernel.modDirVersion}/extra/
+
+        install -m 644 src/linuwu_sense.ko \
+          $out/lib/modules/${kernel.modDirVersion}/extra/
+
+        touch $out/lib/modules/${kernel.modDirVersion}/extra/linuwu_sense.ko.cer
+
         runHook postInstall
       '';
-
       meta = with lib; {
         description = "Kernel module for Linuwu-Sense fan and power control";
         platforms = platforms.linux;
