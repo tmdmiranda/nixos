@@ -1,5 +1,10 @@
 { pkgs, ... }:
 {
+
+  home.sessionPath = [
+  "$HOME/.npm-global/bin"
+  ];
+
   programs.bash = {
     enable = true;
     initExtra = ''
@@ -18,6 +23,8 @@
         fi
         rm -f -- "$tmp"
       }
+
+      export PATH="$HOME/.npm-global/bin:$PATH"
     '';
     shellAliases = {
       ll = "ls -la";

@@ -13,5 +13,6 @@
     llvmPackages.openmp
     asm-lsp
     zls
+    glsl_analyzer
   ];
 }

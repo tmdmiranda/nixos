@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if (($# > 1)) || [[ "${1:-}" != "" && "$1" != --restore ]]; then
+    printf 'Usage: %s [--restore]\n' "$0" >&2
+    exit 1
+fi
+
 wallpaper_dir="${wallpaper_path:-$HOME/.local/share/walls}"
 state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/wallch"
 mkdir -p -- "$state_dir"
-wallpaper_index_file="$state_dir/wallpaper_index"
+wallpaper_file="$state_dir/current_wallpaper"
 
 # Serialize cycling and daemon startup when the key binding is pressed rapidly.
 exec 9>"$state_dir/lock"
@@ -56,6 +61,7 @@ if ((${#old_players[@]})); then
 fi
 
 [[ -d "$wallpaper_dir" ]] || { printf 'Wallpaper directory does not exist: %s\n' "$wallpaper_dir" >&2; exit 1; }
+wallpaper_dir=$(realpath -e -- "$wallpaper_dir")
 # NUL delimiters preserve spaces and other special characters in filenames.
 wallpaper_list=$(mktemp "$state_dir/list.XXXXXX")
 trap 'rm -f -- "$wallpaper_list"' EXIT
@@ -63,18 +69,31 @@ find "$wallpaper_dir" -type f \( -iname '*.jpg' -o -iname '*.png' -o -iname '*.j
 mapfile -d '' -t wallpapers < "$wallpaper_list"
 ((${#wallpapers[@]})) || { printf 'No wallpapers found in %s\n' "$wallpaper_dir" >&2; exit 1; }
 
-current_index=0
-if [[ -f "$wallpaper_index_file" ]]; then
-    current_index=$(cat -- "$wallpaper_index_file")
-elif [[ -f "$HOME/.config/hypr/wallpaper_index" ]]; then
-    # Read the old index once, without writing into the config directory.
-    current_index=$(cat -- "$HOME/.config/hypr/wallpaper_index")
+current_index=-1
+if [[ -f "$wallpaper_file" ]]; then
+    # NUL termination preserves even trailing newlines in filenames.
+    IFS= read -r -d '' current_wallpaper < "$wallpaper_file" || true
+    for i in "${!wallpapers[@]}"; do
+        if [[ "${wallpapers[$i]}" == "$current_wallpaper" ]]; then
+            current_index=$i
+            break
+        fi
+    done
+else
+    # Migrate the old index only until a path has been saved successfully.
+    for index_file in "$state_dir/wallpaper_index" "$HOME/.config/hypr/wallpaper_index"; do
+        [[ -f "$index_file" ]] || continue
+        legacy_index=$(cat -- "$index_file")
+        if [[ "$legacy_index" =~ ^[0-9]{1,9}$ ]] && ((10#$legacy_index < ${#wallpapers[@]})); then
+            current_index=$((10#$legacy_index))
+        fi
+        break
+    done
 fi
-# Reject corrupt or excessively large values before using shell arithmetic.
-if [[ ! "$current_index" =~ ^[0-9]{1,9}$ ]]; then
-    current_index=0
+next_index=$(( (current_index + 1) % ${#wallpapers[@]} ))
+if [[ "${1:-}" == --restore ]] && ((current_index >= 0)); then
+    next_index=$current_index
 fi
-next_index=$(( (10#$current_index + 1) % ${#wallpapers[@]} ))
 next_wallpaper="${wallpapers[$next_index]}"
 
 if [[ "${next_wallpaper,,}" == *.mp4 ]]; then
@@ -101,6 +120,6 @@ else
     awww img "$next_wallpaper" --transition-fps 244 --transition-type simple --transition-duration 1
 fi
 
-# Commit the index only after the wallpaper command succeeds.
-printf '%s\n' "$next_index" > "$wallpaper_index_file.tmp"
-mv -f -- "$wallpaper_index_file.tmp" "$wallpaper_index_file"
+# Commit the path only after the wallpaper command succeeds.
+printf '%s\0' "$next_wallpaper" > "$wallpaper_file.tmp"
+mv -f -- "$wallpaper_file.tmp" "$wallpaper_file"

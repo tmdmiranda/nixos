@@ -40,7 +40,22 @@ vim.lsp.config["clangd"] = {
   },
 }
 
-local servers = { "html", "cssls", "rust_analyzer", "stylua", "clangd", "zls", "lua_language_server", "gopls", "nil_ls", "asm-lsp" }
+vim.lsp.config("glsl_analyzer", {
+  cmd = { "glsl_analyzer" },
+  filetypes = {
+    "glsl",
+    "vert",
+    "frag",
+    "geom",
+    "tesc",
+    "tese",
+    "comp",
+  },
+  root_markers = { ".git" },
+  workspace_required = false,
+})
+
+local servers = { "html", "cssls", "rust_analyzer", "stylua", "clangd", "zls", "lua_language_server", "gopls", "nil_ls", "asm-lsp", "glsl_analyzer" }
 
 -- Enable all LSP servers
 vim.lsp.enable(servers)
