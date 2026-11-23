@@ -21,9 +21,12 @@ my dotfiles for my laptop setup (probably gonna expand to desktop soon), got som
 | desktop | desktop 2 |
 | --- | --- |
 | ![my desktop](./screenshots/2026-10-13-132407_hyprshot.png) | ![my desktop 2](./screenshots/2026-10-13-132543_hyprshot.png) |
+### wallpaper engine running with wallpiper
+---
+![wallpiper](./screenshots/wpe.png)
 
 ### my hyprlock :3
-
+---
 ![hyprlock](./screenshots/hyprlock-2026-10-14_01-38-19-324584009.png)
 
 ## idk stuff im running
