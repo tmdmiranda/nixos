@@ -55,7 +55,7 @@ vim.lsp.config("glsl_analyzer", {
   workspace_required = false,
 })
 
-local servers = { "html", "cssls", "rust_analyzer", "stylua", "clangd", "zls", "lua_language_server", "gopls", "nil_ls", "asm-lsp", "glsl_analyzer" }
+local servers = { "html", "cssls", "rust_analyzer", "stylua", "clangd", "pyright", "zls", "lua_language_server", "gopls", "nil_ls", "asm-lsp", "glsl_analyzer" }
 
 -- Enable all LSP servers
 vim.lsp.enable(servers)

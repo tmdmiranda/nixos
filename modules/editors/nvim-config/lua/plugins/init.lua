@@ -42,6 +42,20 @@ return {
 
         return opts
       end,
+
+      config = function(_, opts)
+        local cmp = require("cmp")
+
+        cmp.setup(opts)
+
+        cmp.setup.filetype({"python", "zig", "glsl"}, {
+          completion = {
+            autocomplete = {
+              cmp.TriggerEvent.TextChanged,
+            },
+          },
+        })
+      end,
     },
   }
   -- test new blink

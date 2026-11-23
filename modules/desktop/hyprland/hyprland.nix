@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    (callPackage ../wallpiper.nix { })
     wl-clipboard
     hyprpicker
     cliphist

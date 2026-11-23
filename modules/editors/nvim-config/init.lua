@@ -1,6 +1,6 @@
 vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
 vim.g.mapleader = " "
-
+dofile(vim.fn.expand("~/.config/nvim-python-host.lua"))
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 
@@ -10,6 +10,7 @@ if not vim.uv.fs_stat(lazypath) then
 end
 
 vim.opt.rtp:prepend(lazypath)
+vim.opt.relativenumber = true
 
 local lazy_config = require "configs.lazy"
 
@@ -31,6 +32,10 @@ dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")
 
 require "options"
+-- Enable Python provider for Molten
+vim.g.loaded_python3_provider = nil
+vim.g.loaded_remote_plugins = nil
+vim.cmd("runtime plugin/rplugin.vim")
 require "autocmds"
 
 require'nvim-tree'.setup {}

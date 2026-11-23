@@ -47,6 +47,8 @@
 
   hardware.nvidia-container-toolkit.enable = true;
 
+  hardware.nvidia.dynamicBoost.enable = true;
+
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;

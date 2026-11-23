@@ -61,7 +61,6 @@ binds.setup = function(hl)
   hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
   hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 
-  hl.bind(binds.mod .. " + SHIFT + W", hl.dsp.exec_cmd("/home/tiago/.config/hypr/scripts/wallch.sh"))
   hl.bind(binds.mod .. " + L", hl.dsp.exec_cmd("hyprlock"))
 
 end
